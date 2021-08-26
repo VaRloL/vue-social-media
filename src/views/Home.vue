@@ -1,6 +1,7 @@
 <template>
   <perfect-scrollbar class="darkClass white--text py-2">
-    <Posts :posts="posts" :users="users" :photos="photos"></Posts>    
+    <Posts v-for="post in posts" :key="post.id" :photo="findPicture(post.userId)"
+    :userId="findId(post.userId)" :post="post"></Posts>    
   </perfect-scrollbar>
 </template>
 
@@ -36,6 +37,16 @@
         .then(r => {let lol = r.data.map((x:any) => {return x})
           lol.forEach((xd:any) => {this.photos.push(xd)})
         })
+    },
+    methods:{
+      findId(id : number){
+        let x = this.users.find((userId: any) => userId.id === id)
+        return x.username
+      },
+      findPicture(id:number){
+        let x = this.photos.find((userId : any) => userId.UserId === id)
+        return x.pfp
+      }
     }
   })
 </script>
