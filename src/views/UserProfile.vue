@@ -1,5 +1,5 @@
 <template>
-  <perfect-scrollbar class="pa-5">
+  <perfect-scrollbar class="pa-5 darkClass">
     <!--USER-RELATED STUFF-->
     <div v-if="userInfo != undefined">
       <div>
