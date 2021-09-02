@@ -1,5 +1,5 @@
 <template>
-  <perfect-scrollbar class="darkClass white--text py-2">
+  <perfect-scrollbar v-if="posts.length != 0" class="darkClass white--text py-5 px-5" :style="{'height': '${vuetify.breakpoint.height}px'}">
     <Posts v-for="post in posts" :key="post.id" :photo="findPicture(post.userId)"
     :userId="findId(post.userId)" :post="post"></Posts>    
   </perfect-scrollbar>
@@ -41,7 +41,7 @@
     methods:{
       findId(id : number){
         let x = this.users.find((userId: any) => userId.id === id)
-        return x.username
+        return x
       },
       findPicture(id:number){
         let x = this.photos.find((userId : any) => userId.UserId === id)
@@ -52,7 +52,7 @@
 </script>
 
 <style scoped>
-.ps {
-  height:100%;
+.ps{
+  width:100%;
 }
 </style>

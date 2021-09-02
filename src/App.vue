@@ -1,10 +1,10 @@
 <template>
   <v-app dark>
     <navDraw/>
-    <v-main>
-      <div class="d-flex flex-row">
+    <v-main class="darkClass">
+      <v-row>
         <router-view></router-view>
-      </div>
+      </v-row>
     </v-main>
   </v-app>
 </template>
@@ -30,5 +30,9 @@ export default Vue.extend({
 
 .darkLighterClass {
   background-color:#1f1f1f;
+}
+
+.post{
+  border:1px solid #313131;
 }
 </style>
