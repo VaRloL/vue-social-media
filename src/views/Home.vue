@@ -1,7 +1,10 @@
 <template>
-  <perfect-scrollbar v-if="posts.length != 0" class="darkClass white--text py-5 px-5" :style="{'height': '${vuetify.breakpoint.height}px'}">
-    <Posts v-for="post in posts" :key="post.id" :photo="findPicture(post.userId)"
+  <perfect-scrollbar class="darkClass white--text py-5 px-5 d-flex justify-center" :style="{'height': '${vuetify.breakpoint.height}px'}">
+    <div v-if="allLoaded">
+      <Posts v-for="post in posts" :key="post.id" :photo="findPicture(post.userId)"
     :userId="findId(post.userId)" :post="post"></Posts>    
+    </div>
+    <v-progress-circular color="white" class="mt-10" indeterminate v-else/>
   </perfect-scrollbar>
 </template>
 
@@ -15,28 +18,31 @@
       return {
         posts:Array<any>(),
         users:Array<any>(),
-        photos:Array<any>()
+        photos:Array<any>(),
+        allLoaded: false
       }
     },
     components:{
       Posts
     },
     created(){
-      axios.get("https://jsonplaceholder.typicode.com/posts")
+      Promise.all([
+        axios.get("https://jsonplaceholder.typicode.com/posts")
         .then(r => {
           let lol = r.data.map((x : any)=>{return x})
           lol.forEach((xd:any) => {this.posts.push(xd)})
-        })
+        }),
 
       axios.get("https://jsonplaceholder.typicode.com/users")
         .then(r => {
           let lol = r.data.map((x:any) => {return x})
           lol.forEach((xd:any) => {this.users.push(xd)})
-        })
+        }),
       axios.get("profilepic.json")
         .then(r => {let lol = r.data.map((x:any) => {return x})
           lol.forEach((xd:any) => {this.photos.push(xd)})
         })
+      ]).then(() => {this.allLoaded = true})
     },
     methods:{
       findId(id : number){
@@ -50,9 +56,3 @@
     }
   })
 </script>
-
-<style scoped>
-.ps{
-  width:100%;
-}
-</style>

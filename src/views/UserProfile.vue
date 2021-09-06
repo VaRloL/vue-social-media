@@ -1,7 +1,7 @@
 <template>
-  <perfect-scrollbar class="pa-5 darkClass">
+  <perfect-scrollbar class="darkClass white--text py-5 px-5 d-flex flex-column">
     <!--USER-RELATED STUFF-->
-    <div v-if="userInfo != undefined">
+    <div v-if="allLoaded">
       <div>
         <div>
           <v-img
@@ -14,7 +14,7 @@
             size="140"
             color="grey darken-4"
             style="margin-top: -50px; margin-left: 20px"
-            ><v-avatar size="128"><v-img v-if="pfp != ''" :src="pfp"></v-img></v-avatar
+            ><v-avatar size="128"><v-img :src="pfp"></v-img></v-avatar
           ></v-avatar>
           <div>
             <p class="text-h4 ml-3 mt-2 mb-0 white--text font-italic">
@@ -35,9 +35,16 @@
         <v-divider dark class="ma-5"></v-divider>
       </div>
     </div>
+    <div v-else class="d-flex justify-center flex-column">
+      <v-progress-circular indeterminate class="ma-10" color="white" style="width:100%;"/>
+      <v-divider dark></v-divider>
+    </div>
     <!---POSTS--->
-    <div v-if="userPosts.length != 0" class="white--text">
+    <div v-if="allLoaded" class="white--text">
         <posts v-for="post in userPosts" :key="post.id" :post="post" :photo="pfp" :userId="userInfo"/>
+    </div>
+    <div v-else class="d-flex justify-center flex-column">
+      <v-progress-circular indeterminate class="ma-10" color="white" style="width:100%;"/>
     </div>
     </perfect-scrollbar>
 </template>
@@ -52,7 +59,8 @@ export default Vue.extend({
     return {
       userInfo: undefined,
       pfp: "",
-      userPosts: Array<any>()
+      userPosts: Array<any>(),
+      allLoaded: false
     };
   },
   components: {
@@ -60,19 +68,20 @@ export default Vue.extend({
   },
   created() {
     if (this.$route.params.userId != "") {
-      axios
+      Promise.all([
+        axios
         .get(
           "https://jsonplaceholder.typicode.com/users/" +
             this.$route.params.userId
         )
-        .then((r) => (this.userInfo = r.data));
+        .then((r) => (this.userInfo = r.data)),
 
       axios.get("/profilepic.json").then((r) => {
         let x = r.data.find(
           (lol: any) => lol.UserId == this.$route.params.userId
         );
         this.pfp = x.pfp;
-      });
+      }),
 
       axios.get("https://jsonplaceholder.typicode.com/posts")
       .then(r => {
@@ -80,8 +89,9 @@ export default Vue.extend({
               if(element.userId == this.$route.params.userId){
                   this.userPosts.push(element)
               }
-          });
+          })
       })
+      ]).then(() => {this.allLoaded = true})
     }
   },
 });

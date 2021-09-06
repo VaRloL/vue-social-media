@@ -35,4 +35,8 @@ export default Vue.extend({
 .post{
   border:1px solid #313131;
 }
+
+.ps{
+  width:100%;
+}
 </style>
