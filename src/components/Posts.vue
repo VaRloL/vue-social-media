@@ -7,7 +7,7 @@
       </v-avatar>
       <div class="d-flex flex-column ">
         <p class="text-h5 ma-0">{{post.title}}</p>
-        <a @click="$router.push('/profile/'+userId.id)">@{{userId.username}}</a>
+        <a @click="$router.push('/profile/'+userId.id).catch(err => {})">@{{userId.username}}</a>
       </div>
 
       <v-menu>

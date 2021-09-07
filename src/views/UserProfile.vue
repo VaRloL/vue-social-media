@@ -13,7 +13,7 @@
           <v-avatar
             size="140"
             color="grey darken-4"
-            style="margin-top: -50px; margin-left: 20px"
+            style="margin-top: -50px; margin-left: 20px;"
             ><v-avatar size="128"><v-img :src="pfp"></v-img></v-avatar
           ></v-avatar>
           <div>
@@ -83,7 +83,7 @@ export default Vue.extend({
         this.pfp = x.pfp;
       }),
 
-      axios.get("https://jsonplaceholder.typicode.com/posts")
+      axios.get(`https://jsonplaceholder.typicode.com/users/${this.$route.params.userId}/posts`)
       .then(r => {
           r.data.forEach((element:any) => {
               if(element.userId == this.$route.params.userId){
